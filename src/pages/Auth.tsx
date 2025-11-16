@@ -35,13 +35,13 @@ const Auth = () => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: profile } = await supabase
-          .from("profiles")
+        const { data: userRole } = await supabase
+          .from("user_roles")
           .select("role")
-          .eq("id", session.user.id)
+          .eq("user_id", session.user.id)
           .single();
         
-        if (profile?.role === "admin") {
+        if (userRole?.role === "admin") {
           navigate("/admin");
         } else {
           navigate("/student");
@@ -73,15 +73,15 @@ const Auth = () => {
     }
 
     if (data.user) {
-      const { data: profile } = await supabase
-        .from("profiles")
+      const { data: userRole } = await supabase
+        .from("user_roles")
         .select("role")
-        .eq("id", data.user.id)
+        .eq("user_id", data.user.id)
         .single();
 
       toast.success("Logged in successfully");
       
-      if (profile?.role === "admin") {
+      if (userRole?.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/student");
