@@ -45,8 +45,15 @@ const SubmitComplaint = () => {
         .eq("id", session.user.id)
         .single();
 
-      if (profileData?.role !== "student") {
-        navigate("/admin");
+      const { data: userRoles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id);
+
+      const hasAdminRole = userRoles?.some(r => r.role === "admin");
+
+      if (!hasAdminRole) {
+        navigate("/student");
         return;
       }
 

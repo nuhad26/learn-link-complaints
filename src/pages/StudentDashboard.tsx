@@ -39,7 +39,14 @@ const StudentDashboard = () => {
         .eq("id", session.user.id)
         .single();
 
-      if (profileData?.role === "admin") {
+      const { data: userRoles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id);
+
+      const hasAdminRole = userRoles?.some(r => r.role === "admin");
+
+      if (hasAdminRole) {
         navigate("/admin");
         return;
       }
