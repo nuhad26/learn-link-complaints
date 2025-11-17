@@ -10,7 +10,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, Paperclip } from "lucide-react";
 import { format } from "date-fns";
 
 interface Response {
@@ -200,6 +200,23 @@ const ComplaintDetail = () => {
           </CardHeader>
           <CardContent>
             <p className="text-foreground whitespace-pre-wrap">{complaint.description}</p>
+            
+            {complaint.attachment_url && (
+              <div className="mt-4 pt-4 border-t border-border">
+                <div className="flex items-center gap-2 text-sm">
+                  <Paperclip className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Attachment:</span>
+                  <a
+                    href={complaint.attachment_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    View Attachment
+                  </a>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 

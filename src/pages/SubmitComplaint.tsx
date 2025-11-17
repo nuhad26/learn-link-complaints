@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload } from "lucide-react";
 import { z } from "zod";
 
 const complaintSchema = z.object({
@@ -29,6 +29,7 @@ const SubmitComplaint = () => {
     category: "",
     priority: "medium",
   });
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -73,6 +74,31 @@ const SubmitComplaint = () => {
       return;
     }
 
+    let attachmentUrl = null;
+
+    // Upload attachment if provided
+    if (attachmentFile) {
+      const fileExt = attachmentFile.name.split('.').pop();
+      const fileName = `${session.user.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('complaint-attachments')
+        .upload(fileName, attachmentFile);
+
+      if (uploadError) {
+        toast.error("Failed to upload attachment");
+        console.error(uploadError);
+        setIsSubmitting(false);
+        return;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('complaint-attachments')
+        .getPublicUrl(fileName);
+      
+      attachmentUrl = publicUrl;
+    }
+
     const { error } = await supabase.from("complaints").insert([{
       student_id: session.user.id,
       title: formData.title,
@@ -80,6 +106,7 @@ const SubmitComplaint = () => {
       category: formData.category as any,
       priority: formData.priority as any,
       status: "pending" as any,
+      attachment_url: attachmentUrl,
     }]);
 
     if (error) {
@@ -180,6 +207,32 @@ const SubmitComplaint = () => {
                 />
                 <p className="text-xs text-muted-foreground">
                   Minimum 20 characters required
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="attachment">Attachment (Optional)</Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="attachment"
+                    type="file"
+                    onChange={(e) => setAttachmentFile(e.target.files?.[0] || null)}
+                    className="cursor-pointer"
+                    accept="image/*,.pdf,.doc,.docx"
+                  />
+                  {attachmentFile && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setAttachmentFile(null)}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Supported formats: Images, PDF, Word documents (Max 5MB)
                 </p>
               </div>
 

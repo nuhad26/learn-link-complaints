@@ -55,6 +55,7 @@ export type Database = {
       }
       complaints: {
         Row: {
+          attachment_url: string | null
           category: Database["public"]["Enums"]["complaint_category"]
           created_at: string
           description: string
@@ -66,6 +67,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          attachment_url?: string | null
           category: Database["public"]["Enums"]["complaint_category"]
           created_at?: string
           description: string
@@ -77,6 +79,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          attachment_url?: string | null
           category?: Database["public"]["Enums"]["complaint_category"]
           created_at?: string
           description?: string
