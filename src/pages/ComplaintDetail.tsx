@@ -33,6 +33,7 @@ const ComplaintDetail = () => {
   const [newStatus, setNewStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkAuthAndFetch = async () => {
@@ -47,6 +48,14 @@ const ComplaintDetail = () => {
         .select("*")
         .eq("id", session.user.id)
         .single();
+
+      const { data: userRoles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id);
+
+      const hasAdminRole = userRoles?.some(r => r.role === "admin");
+      setIsAdmin(hasAdminRole || false);
 
       setProfile(profileData);
       await fetchComplaintDetails();
@@ -163,12 +172,11 @@ const ComplaintDetail = () => {
     );
   }
 
-  const isAdmin = profile.role === "admin";
   const backPath = isAdmin ? "/admin" : "/student";
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar userRole={profile.role} userName={profile.full_name} />
+      <Navbar userRole={isAdmin ? "admin" : "student"} userName={profile.full_name} />
       
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Button
