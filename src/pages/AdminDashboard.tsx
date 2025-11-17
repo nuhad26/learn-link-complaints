@@ -5,7 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
-import { FileText, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { FileText, Clock, CheckCircle2, AlertCircle, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 
 interface Complaint {
@@ -90,6 +90,7 @@ const AdminDashboard = () => {
     pending: complaints.filter(c => c.status === "pending").length,
     inProgress: complaints.filter(c => c.status === "in_progress").length,
     resolved: complaints.filter(c => c.status === "resolved").length,
+    highPriority: complaints.filter(c => c.priority === "high").length,
   };
 
   const getCategoryDisplay = (category: string) => {
@@ -112,7 +113,7 @@ const AdminDashboard = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Complaints</CardTitle>
@@ -150,6 +151,16 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.resolved}</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">High Priority</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.highPriority}</div>
             </CardContent>
           </Card>
         </div>
