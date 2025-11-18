@@ -2,7 +2,15 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { FileText, LogOut } from "lucide-react";
+import { FileText, LogOut, Moon, Sun, User } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NavbarProps {
   userRole?: "student" | "admin";
@@ -11,6 +19,7 @@ interface NavbarProps {
 
 export const Navbar = ({ userRole, userName }: NavbarProps) => {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -34,7 +43,7 @@ export const Navbar = ({ userRole, userName }: NavbarProps) => {
           </div>
           <div className="flex items-center gap-4">
             {userName && (
-              <div className="text-sm">
+              <div className="text-sm hidden md:block">
                 <span className="text-muted-foreground">Welcome, </span>
                 <span className="font-medium text-foreground">{userName}</span>
                 {userRole && (
@@ -44,10 +53,46 @@ export const Navbar = ({ userRole, userName }: NavbarProps) => {
                 )}
               </div>
             )}
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </Button>
+
+            {userRole === "student" && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => navigate("/student/profile")}>
+                    <User className="h-4 w-4 mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {userRole === "admin" && (
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       </div>
