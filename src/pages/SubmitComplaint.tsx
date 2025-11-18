@@ -52,8 +52,8 @@ const SubmitComplaint = () => {
 
       const hasAdminRole = userRoles?.some(r => r.role === "admin");
 
-      if (!hasAdminRole) {
-        navigate("/student");
+      if (hasAdminRole) {
+        navigate("/admin");
         return;
       }
 
