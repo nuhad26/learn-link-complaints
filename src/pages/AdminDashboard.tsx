@@ -5,7 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
-import { FileText, Clock, CheckCircle2, AlertCircle, AlertTriangle } from "lucide-react";
+import { FileText } from "lucide-react";
 import { format } from "date-fns";
 
 interface Complaint {
@@ -119,53 +119,38 @@ const AdminDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Complaints</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.total}</div>
+          <Card className="bg-muted/30 border-muted rounded-xl shadow-none">
+            <CardContent className="pt-6">
+              <CardTitle className="text-sm font-medium text-muted-foreground mb-3">Total Complaints</CardTitle>
+              <div className="text-3xl font-bold text-foreground">{stats.total}</div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Pending</CardTitle>
-              <AlertCircle className="h-4 w-4 text-warning" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.pending}</div>
+          <Card className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/50 rounded-xl shadow-none">
+            <CardContent className="pt-6">
+              <CardTitle className="text-sm font-medium text-muted-foreground mb-3">Pending</CardTitle>
+              <div className="text-3xl font-bold text-amber-600 dark:text-amber-500">{stats.pending}</div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">In Progress</CardTitle>
-              <Clock className="h-4 w-4 text-info" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.inProgress}</div>
+          <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/50 rounded-xl shadow-none">
+            <CardContent className="pt-6">
+              <CardTitle className="text-sm font-medium text-muted-foreground mb-3">In Progress</CardTitle>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-500">{stats.inProgress}</div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Resolved</CardTitle>
-              <CheckCircle2 className="h-4 w-4 text-success" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.resolved}</div>
+          <Card className="bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900/50 rounded-xl shadow-none">
+            <CardContent className="pt-6">
+              <CardTitle className="text-sm font-medium text-muted-foreground mb-3">Resolved</CardTitle>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-500">{stats.resolved}</div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">High Priority</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-destructive" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.highPriority}</div>
+          <Card className="bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50 rounded-xl shadow-none">
+            <CardContent className="pt-6">
+              <CardTitle className="text-sm font-medium text-muted-foreground mb-3">High Priority</CardTitle>
+              <div className="text-3xl font-bold text-red-600 dark:text-red-500">{stats.highPriority}</div>
             </CardContent>
           </Card>
         </div>
