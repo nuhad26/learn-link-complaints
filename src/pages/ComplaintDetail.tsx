@@ -73,7 +73,6 @@ const ComplaintDetail = () => {
         *,
         profiles:student_id (
           full_name,
-          roll_number,
           email
         )
       `)
@@ -194,7 +193,7 @@ const ComplaintDetail = () => {
               <div className="flex-1">
                 <CardTitle className="text-2xl">{complaint.title}</CardTitle>
                 <CardDescription className="mt-2">
-                  Submitted by {complaint.profiles.full_name} ({complaint.profiles.roll_number})
+                  Submitted by {complaint.profiles?.full_name || "Unknown Student"}
                   <br />
                   {getCategoryDisplay(complaint.category)} • 
                   {format(new Date(complaint.created_at), "MMMM d, yyyy 'at' h:mm a")}
