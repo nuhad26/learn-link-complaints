@@ -17,7 +17,6 @@ const loginSchema = z.object({
 
 const registerSchema = loginSchema.extend({
   fullName: z.string().min(2, "Full name must be at least 2 characters").max(100),
-  rollNumber: z.string().min(1, "Roll number is required").max(50),
 });
 
 const Auth = () => {
@@ -28,7 +27,6 @@ const Auth = () => {
     email: "",
     password: "",
     fullName: "",
-    rollNumber: "",
   });
 
   useEffect(() => {
@@ -108,7 +106,6 @@ const Auth = () => {
       options: {
         data: {
           full_name: registerForm.fullName,
-          roll_number: registerForm.rollNumber,
           role: "student",
         },
         emailRedirectTo: `${window.location.origin}/student`,
@@ -123,7 +120,7 @@ const Auth = () => {
 
     if (data.user) {
       toast.success("Account created successfully! Please log in.");
-      setRegisterForm({ email: "", password: "", fullName: "", rollNumber: "" });
+      setRegisterForm({ email: "", password: "", fullName: "" });
     }
     setIsLoading(false);
   };
@@ -189,17 +186,6 @@ const Auth = () => {
                     placeholder="John Doe"
                     value={registerForm.fullName}
                     onChange={(e) => setRegisterForm({ ...registerForm, fullName: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="register-roll">Roll Number</Label>
-                  <Input
-                    id="register-roll"
-                    type="text"
-                    placeholder="2024CS001"
-                    value={registerForm.rollNumber}
-                    onChange={(e) => setRegisterForm({ ...registerForm, rollNumber: e.target.value })}
                     required
                   />
                 </div>

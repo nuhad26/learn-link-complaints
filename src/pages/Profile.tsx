@@ -18,7 +18,6 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
-    roll_number: "",
   });
   const [passwordData, setPasswordData] = useState({
     newPassword: "",
@@ -43,7 +42,6 @@ const Profile = () => {
       setFormData({
         full_name: profileData?.full_name || "",
         email: profileData?.email || "",
-        roll_number: profileData?.roll_number || "",
       });
       setLoading(false);
     };
@@ -60,7 +58,6 @@ const Profile = () => {
       .from("profiles")
       .update({
         full_name: formData.full_name,
-        roll_number: formData.roll_number,
       })
       .eq("id", session.user.id);
 
@@ -139,14 +136,6 @@ const Profile = () => {
                   value={formData.email}
                   disabled
                   className="bg-muted"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="roll_number">Roll Number</Label>
-                <Input
-                  id="roll_number"
-                  value={formData.roll_number}
-                  onChange={(e) => setFormData({ ...formData, roll_number: e.target.value })}
                 />
               </div>
               <Button onClick={handleUpdateProfile} disabled={saving} className="w-full">

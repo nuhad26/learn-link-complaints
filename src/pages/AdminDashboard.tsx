@@ -18,8 +18,7 @@ interface Complaint {
   created_at: string;
   profiles: {
     full_name: string;
-    roll_number: string;
-  };
+  } | null;
 }
 
 const AdminDashboard = () => {
@@ -78,8 +77,7 @@ const AdminDashboard = () => {
       .select(`
         *,
         profiles:student_id (
-          full_name,
-          roll_number
+          full_name
         )
       `)
       .order("created_at", { ascending: false });
@@ -196,7 +194,7 @@ const AdminDashboard = () => {
                     <div className="flex-1">
                       <CardTitle className="text-lg">{complaint.title}</CardTitle>
                       <CardDescription className="mt-1">
-                        {complaint.profiles.full_name} ({complaint.profiles.roll_number}) • 
+                        {complaint.profiles?.full_name || "Unknown Student"} • 
                         {getCategoryDisplay(complaint.category)} • 
                         {format(new Date(complaint.created_at), "MMM d, yyyy")}
                       </CardDescription>
