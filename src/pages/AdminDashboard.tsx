@@ -99,7 +99,22 @@ const AdminDashboard = () => {
   };
 
   const getCategoryDisplay = (category: string) => {
-    return category.split("_").map(word => 
+    const categoryMap: Record<string, string> = {
+      'mentor': 'Mentor',
+      'admin': 'Admin',
+      'academic_counsellor': 'Academic Counsellor',
+      'working_hub': 'Working Hub',
+      'peer': 'Peer',
+      'other': 'Other',
+      // Keep old categories for backward compatibility
+      'academic': 'Academic',
+      'hostel': 'Hostel',
+      'transport': 'Transport',
+      'finance': 'Finance',
+      'disciplinary': 'Disciplinary',
+      'others': 'Others'
+    };
+    return categoryMap[category] || category.split("_").map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(" ");
   };
