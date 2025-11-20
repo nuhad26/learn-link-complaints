@@ -65,12 +65,12 @@ export const ComplaintFilters = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Categories</SelectItem>
-          <SelectItem value="academic">Academic</SelectItem>
-          <SelectItem value="hostel">Hostel</SelectItem>
-          <SelectItem value="transport">Transport</SelectItem>
-          <SelectItem value="finance">Finance</SelectItem>
-          <SelectItem value="disciplinary">Disciplinary</SelectItem>
-          <SelectItem value="others">Others</SelectItem>
+          <SelectItem value="mentor">Mentor</SelectItem>
+          <SelectItem value="admin">Admin</SelectItem>
+          <SelectItem value="academic_counsellor">Academic Counsellor</SelectItem>
+          <SelectItem value="working_hub">Working Hub</SelectItem>
+          <SelectItem value="peer">Peer</SelectItem>
+          <SelectItem value="other">Other</SelectItem>
         </SelectContent>
       </Select>
     </div>

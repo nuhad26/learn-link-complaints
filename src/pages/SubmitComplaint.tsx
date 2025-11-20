@@ -15,7 +15,7 @@ import { z } from "zod";
 const complaintSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters").max(200),
   description: z.string().min(20, "Description must be at least 20 characters").max(2000),
-  category: z.enum(["academic", "hostel", "transport", "finance", "disciplinary", "others"]),
+  category: z.enum(["mentor", "admin", "academic_counsellor", "working_hub", "peer", "other"]),
   priority: z.enum(["low", "medium", "high"]),
 });
 
@@ -170,16 +170,16 @@ const SubmitComplaint = () => {
                   onValueChange={(value) => setFormData({ ...formData, category: value })}
                   required
                 >
-                  <SelectTrigger id="category">
+                  <SelectTrigger id="category" className="bg-background border-[#E0E0E0] h-12">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="academic">Academic</SelectItem>
-                    <SelectItem value="hostel">Hostel</SelectItem>
-                    <SelectItem value="transport">Transport</SelectItem>
-                    <SelectItem value="finance">Finance</SelectItem>
-                    <SelectItem value="disciplinary">Disciplinary</SelectItem>
-                    <SelectItem value="others">Others</SelectItem>
+                  <SelectContent className="bg-background border-[#E0E0E0] shadow-lg z-50">
+                    <SelectItem value="mentor" className="py-3 px-4 hover:bg-muted cursor-pointer">Mentor</SelectItem>
+                    <SelectItem value="admin" className="py-3 px-4 hover:bg-muted cursor-pointer">Admin</SelectItem>
+                    <SelectItem value="academic_counsellor" className="py-3 px-4 hover:bg-muted cursor-pointer">Academic Counsellor</SelectItem>
+                    <SelectItem value="working_hub" className="py-3 px-4 hover:bg-muted cursor-pointer">Working Hub</SelectItem>
+                    <SelectItem value="peer" className="py-3 px-4 hover:bg-muted cursor-pointer">Peer</SelectItem>
+                    <SelectItem value="other" className="py-3 px-4 hover:bg-muted cursor-pointer">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

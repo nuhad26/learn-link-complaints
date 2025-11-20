@@ -174,6 +174,12 @@ export type Database = {
         | "finance"
         | "disciplinary"
         | "others"
+        | "mentor"
+        | "admin"
+        | "academic_counsellor"
+        | "working_hub"
+        | "peer"
+        | "other"
       complaint_priority: "low" | "medium" | "high"
       complaint_status: "pending" | "in_progress" | "resolved"
       user_role: "student" | "admin"
@@ -312,6 +318,12 @@ export const Constants = {
         "finance",
         "disciplinary",
         "others",
+        "mentor",
+        "admin",
+        "academic_counsellor",
+        "working_hub",
+        "peer",
+        "other",
       ],
       complaint_priority: ["low", "medium", "high"],
       complaint_status: ["pending", "in_progress", "resolved"],
