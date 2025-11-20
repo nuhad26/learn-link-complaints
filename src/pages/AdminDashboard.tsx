@@ -5,7 +5,10 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
-import { FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { FileText, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 
 interface Complaint {
@@ -26,6 +29,11 @@ const AdminDashboard = () => {
   const [profile, setProfile] = useState<any>(null);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -118,6 +126,21 @@ const AdminDashboard = () => {
     ).join(" ");
   };
 
+  // Filter complaints based on search and filters
+  const filteredComplaints = complaints.filter(complaint => {
+    const matchesSearch = searchQuery === "" || 
+      complaint.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      complaint.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesPriority = priorityFilter === "all" || complaint.priority === priorityFilter;
+    const matchesCategory = categoryFilter === "all" || complaint.category === categoryFilter;
+    return matchesSearch && matchesPriority && matchesCategory;
+  });
+
+  // Pagination
+  const totalPages = Math.ceil(filteredComplaints.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedComplaints = filteredComplaints.slice(startIndex, startIndex + pageSize);
+
   if (!profile) return null;
 
   return (
@@ -162,6 +185,56 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
+        <div className="mb-6 space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search complaints..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="pl-10"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Select value={priorityFilter} onValueChange={(value) => {
+              setPriorityFilter(value);
+              setCurrentPage(1);
+            }}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Priority</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={categoryFilter} onValueChange={(value) => {
+              setCategoryFilter(value);
+              setCurrentPage(1);
+            }}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="mentor">Mentor</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="academic_counsellor">Academic Counsellor</SelectItem>
+                <SelectItem value="working_hub">Working Hub</SelectItem>
+                <SelectItem value="peer">Peer</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         {loading ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Loading complaints...</p>
@@ -173,38 +246,85 @@ const AdminDashboard = () => {
               <p className="text-muted-foreground">No complaints to display</p>
             </CardContent>
           </Card>
+        ) : filteredComplaints.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">No complaints match your filters</p>
+            </CardContent>
+          </Card>
         ) : (
-          <div className="grid gap-4">
-            {complaints.map((complaint) => (
-              <Card
-                key={complaint.id}
-                className="cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => navigate(`/admin/complaint/${complaint.id}`)}
-              >
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{complaint.title}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {complaint.profiles?.full_name || "Unknown Student"} • 
-                        {getCategoryDisplay(complaint.category)} • 
-                        {format(new Date(complaint.created_at), "MMM d, yyyy")}
-                      </CardDescription>
+          <>
+            <div className="grid gap-4 mb-6">
+              {paginatedComplaints.map((complaint) => (
+                <Card
+                  key={complaint.id}
+                  className="cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => navigate(`/admin/complaint/${complaint.id}`)}
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{complaint.title}</CardTitle>
+                        <CardDescription className="mt-1">
+                          {complaint.profiles?.full_name || "Unknown Student"} • 
+                          {getCategoryDisplay(complaint.category)} • 
+                          {format(new Date(complaint.created_at), "MMM d, yyyy")}
+                        </CardDescription>
+                      </div>
+                      <div className="flex gap-2">
+                        <PriorityBadge priority={complaint.priority as any} />
+                        <StatusBadge status={complaint.status as any} />
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <PriorityBadge priority={complaint.priority as any} />
-                      <StatusBadge status={complaint.status as any} />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {complaint.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {complaint.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                      className="min-w-[2.5rem]"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
