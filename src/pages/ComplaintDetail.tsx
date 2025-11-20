@@ -245,7 +245,7 @@ const ComplaintDetail = () => {
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <span className="font-medium text-foreground">
-                            {response.profiles.full_name}
+                            {response.profiles?.full_name || "Unknown Admin"}
                           </span>
                           <span className="text-xs text-muted-foreground ml-2">
                             (Admin)
