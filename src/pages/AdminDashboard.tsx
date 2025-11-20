@@ -93,9 +93,8 @@ const AdminDashboard = () => {
   const stats = {
     total: complaints.length,
     pending: complaints.filter(c => c.status === "pending").length,
-    inProgress: complaints.filter(c => c.status === "in_progress").length,
     resolved: complaints.filter(c => c.status === "resolved").length,
-    highPriority: complaints.filter(c => c.priority === "high").length,
+    highPriority: complaints.filter(c => c.priority === "high" && c.status !== "resolved").length,
   };
 
   const getCategoryDisplay = (category: string) => {
@@ -133,7 +132,7 @@ const AdminDashboard = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card className="bg-muted/30 border-muted rounded-xl shadow-none">
             <CardContent className="pt-6">
               <CardTitle className="text-sm font-medium text-muted-foreground mb-3">Total Complaints</CardTitle>
@@ -145,13 +144,6 @@ const AdminDashboard = () => {
             <CardContent className="pt-6">
               <CardTitle className="text-sm font-medium text-muted-foreground mb-3">Pending</CardTitle>
               <div className="text-3xl font-bold text-amber-600 dark:text-amber-500">{stats.pending}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/50 rounded-xl shadow-none">
-            <CardContent className="pt-6">
-              <CardTitle className="text-sm font-medium text-muted-foreground mb-3">In Progress</CardTitle>
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-500">{stats.inProgress}</div>
             </CardContent>
           </Card>
 
