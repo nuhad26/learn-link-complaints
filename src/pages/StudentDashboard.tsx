@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
-import { Plus, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, FileText, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 
 interface Complaint {
@@ -24,6 +25,9 @@ const StudentDashboard = () => {
   const [profile, setProfile] = useState<any>(null);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -105,6 +109,19 @@ const StudentDashboard = () => {
     ).join(" ");
   };
 
+  // Filter complaints based on search
+  const filteredComplaints = complaints.filter(complaint => {
+    const matchesSearch = searchQuery === "" || 
+      complaint.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      complaint.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
+  });
+
+  // Pagination
+  const totalPages = Math.ceil(filteredComplaints.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedComplaints = filteredComplaints.slice(startIndex, startIndex + pageSize);
+
   if (!profile) return null;
 
   return (
@@ -125,6 +142,21 @@ const StudentDashboard = () => {
           </Button>
         </div>
 
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search complaints..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
         {loading ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Loading complaints...</p>
@@ -139,37 +171,84 @@ const StudentDashboard = () => {
               </Button>
             </CardContent>
           </Card>
+        ) : filteredComplaints.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">No complaints match your search</p>
+            </CardContent>
+          </Card>
         ) : (
-          <div className="grid gap-4">
-            {complaints.map((complaint) => (
-              <Card
-                key={complaint.id}
-                className="cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => navigate(`/student/complaint/${complaint.id}`)}
-              >
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{complaint.title}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {getCategoryDisplay(complaint.category)} • 
-                        Submitted {format(new Date(complaint.created_at), "MMM d, yyyy")}
-                      </CardDescription>
+          <>
+            <div className="grid gap-4 mb-6">
+              {paginatedComplaints.map((complaint) => (
+                <Card
+                  key={complaint.id}
+                  className="cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => navigate(`/student/complaint/${complaint.id}`)}
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{complaint.title}</CardTitle>
+                        <CardDescription className="mt-1">
+                          {getCategoryDisplay(complaint.category)} • 
+                          Submitted {format(new Date(complaint.created_at), "MMM d, yyyy")}
+                        </CardDescription>
+                      </div>
+                      <div className="flex gap-2">
+                        <PriorityBadge priority={complaint.priority as any} />
+                        <StatusBadge status={complaint.status as any} />
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <PriorityBadge priority={complaint.priority as any} />
-                      <StatusBadge status={complaint.status as any} />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {complaint.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {complaint.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                      className="min-w-[2.5rem]"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
