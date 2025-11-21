@@ -32,6 +32,7 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -133,7 +134,8 @@ const AdminDashboard = () => {
       complaint.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesPriority = priorityFilter === "all" || complaint.priority === priorityFilter;
     const matchesCategory = categoryFilter === "all" || complaint.category === categoryFilter;
-    return matchesSearch && matchesPriority && matchesCategory;
+    const matchesStatus = statusFilter === "all" || complaint.status === statusFilter;
+    return matchesSearch && matchesPriority && matchesCategory && matchesStatus;
   });
 
   // Pagination
@@ -199,7 +201,22 @@ const AdminDashboard = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Select value={statusFilter} onValueChange={(value) => {
+              setStatusFilter(value);
+              setCurrentPage(1);
+            }}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in_progress">In Progress</SelectItem>
+                <SelectItem value="resolved">Resolved</SelectItem>
+              </SelectContent>
+            </Select>
+
             <Select value={priorityFilter} onValueChange={(value) => {
               setPriorityFilter(value);
               setCurrentPage(1);
