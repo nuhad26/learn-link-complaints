@@ -153,7 +153,9 @@ const SubmitComplaint = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="title">Complaint Title*</Label>
+                <Label htmlFor="title">
+                  Complaint Title<span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="title"
                   placeholder="Brief summary of your complaint"
@@ -164,7 +166,9 @@ const SubmitComplaint = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category">Category*</Label>
+                <Label htmlFor="category">
+                  Category<span className="text-destructive">*</span>
+                </Label>
                 <Select
                   value={formData.category}
                   onValueChange={(value) => setFormData({ ...formData, category: value })}
@@ -185,7 +189,9 @@ const SubmitComplaint = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="priority">Priority*</Label>
+                <Label htmlFor="priority">
+                  Priority<span className="text-destructive">*</span>
+                </Label>
                 <Select
                   value={formData.priority}
                   onValueChange={(value) => setFormData({ ...formData, priority: value })}
@@ -203,7 +209,9 @@ const SubmitComplaint = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Detailed Description*</Label>
+                <Label htmlFor="description">
+                  Detailed Description<span className="text-destructive">*</span>
+                </Label>
                 <Textarea
                   id="description"
                   placeholder="Provide a detailed description of your complaint..."

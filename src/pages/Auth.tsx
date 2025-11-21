@@ -155,7 +155,9 @@ const Auth = () => {
               >
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email">
+                      Email<span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="login-email"
                       type="email"
@@ -166,7 +168,9 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
+                    <Label htmlFor="login-password">
+                      Password<span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="login-password"
                       type="password"
@@ -191,7 +195,9 @@ const Auth = () => {
               >
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="register-name">Full Name</Label>
+                    <Label htmlFor="register-name">
+                      Full Name<span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="register-name"
                       type="text"
@@ -202,7 +208,9 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-email">Email</Label>
+                    <Label htmlFor="register-email">
+                      Email<span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="register-email"
                       type="email"
@@ -213,7 +221,9 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-password">Password</Label>
+                    <Label htmlFor="register-password">
+                      Password<span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="register-password"
                       type="password"
