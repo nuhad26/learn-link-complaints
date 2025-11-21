@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { ArrowLeft, Send, Paperclip } from "lucide-react";
 import { format } from "date-fns";
@@ -179,8 +180,36 @@ const ComplaintDetail = () => {
   if (loading || !profile || !complaint) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <p className="text-center text-muted-foreground">Loading...</p>
+        <Navbar userRole="student" userName="" />
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          <Skeleton className="h-10 w-40 mb-6" />
+          <Card className="mb-6">
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div className="flex-1 space-y-3">
+                  <Skeleton className="h-7 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+                <div className="flex gap-2">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-20" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-32" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-20 w-full" />
+            </CardContent>
+          </Card>
         </div>
       </div>
     );

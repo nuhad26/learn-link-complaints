@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ArrowLeft, Save } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 
 const Profile = () => {
@@ -94,7 +95,52 @@ const Profile = () => {
     setSaving(false);
   };
 
-  if (loading || !profile) return null;
+  if (loading || !profile) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar userRole="student" userName="" />
+        <div className="container mx-auto px-4 py-8 max-w-2xl">
+          <Skeleton className="h-10 w-40 mb-6" />
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-6 w-40 mb-2" />
+                <Skeleton className="h-4 w-48" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-20 mb-2" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16 mb-2" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <Skeleton className="h-10 w-full" />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-6 w-36 mb-2" />
+                <Skeleton className="h-4 w-44" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-24 mb-2" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32 mb-2" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <Skeleton className="h-10 w-full" />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -122,7 +168,9 @@ const Profile = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="full_name">Full Name</Label>
+                <Label htmlFor="full_name">
+                  Full Name<span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="full_name"
                   value={formData.full_name}
@@ -152,7 +200,9 @@ const Profile = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="new_password">New Password</Label>
+                <Label htmlFor="new_password">
+                  New Password<span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="new_password"
                   type="password"
@@ -161,7 +211,9 @@ const Profile = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="confirm_password">Confirm Password</Label>
+                <Label htmlFor="confirm_password">
+                  Confirm Password<span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="confirm_password"
                   type="password"
